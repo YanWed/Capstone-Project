@@ -6,7 +6,6 @@ import pandas as pd
 from datetime import datetime
 
 def save_progress(df, path):
-    """Save data with timestamp to prevent overwrites"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     backup_path = f"{os.path.splitext(path)[0]}_{timestamp}.csv"
     df.to_csv(backup_path, index=False, encoding='utf-8-sig')
@@ -21,7 +20,6 @@ def main():
     print(f"Start time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
     
     try:
-        # Extract reviews
         print("\nBeginning review extraction...")
         raw_reviews = extract_reviews(BASE_URL, SUFFIX, MAX_PAGES)
         
@@ -29,20 +27,20 @@ def main():
             print("\nNo reviews collected - check error messages above")
             return
         
-        # Transform data
+
         print("\nProcessing collected data...")
         df = transform_reviews(raw_reviews)
         
-        # Save results
+
         os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
         df.to_csv(OUTPUT_CSV, index=False, encoding='utf-8-sig')
         save_progress(df, OUTPUT_CSV)
         
-        # Calculate statistics
+
         duration = (datetime.now() - start_time).total_seconds() / 60
         reviews_per_min = len(df) / duration if duration > 0 else 0
         
-        # Final report
+
         print("\n" + "="*50)
         print("Final Report")
         print("="*50)
